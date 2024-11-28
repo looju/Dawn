@@ -1,4 +1,5 @@
 import Headerbox from "@/components/headerbox";
+import TotalBalanceBox from "@/components/totalBalanceBox";
 import React from "react";
 
 export default function Home() {
@@ -9,9 +10,14 @@ export default function Home() {
         <header className="home-header">
           <Headerbox
             type="greeting"
-            title="welcome"
+            title="Welcome"
             user={loggedIn?.firstName || "Guest"}
-            subText="Access and manage your accounts and transactions"
+            subtext="Access and manage your accounts and transactions"
+          />
+          <TotalBalanceBox
+            accounts={[]}
+            totalBanks={1}
+            totalCurrentBalance={12500}
           />
         </header>
       </div>
