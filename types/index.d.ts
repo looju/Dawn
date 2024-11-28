@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+import { ChartData } from "chart.js";
+
 declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -210,6 +212,10 @@ declare interface TotlaBalanceBoxProps {
 
 declare interface FooterProps {
   user: User;
+}
+
+declare interface ChartProps {
+  chartData: ChartData<"doughnut", unknown, number[]>;
 }
 
 declare interface RightSidebarProps {
