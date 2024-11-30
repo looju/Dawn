@@ -1,3 +1,4 @@
+import SideBar from "@/components/sideBar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
@@ -6,9 +7,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const loggedIn = { firstName: "loju", lastName: "hi" };
   return (
-    <main>
-      sidebar
+    <main className="flex flex-row w-full h-screen font-ibm-plex-serif">
+      <SideBar user={loggedIn} />
       {children}
     </main>
   );
