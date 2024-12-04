@@ -1,3 +1,4 @@
+import MobileNav from "@/components/mobileNav";
 import SideBar from "@/components/sideBar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -14,16 +15,13 @@ export default function RootLayout({
       <SideBar user={loggedIn} />
       <div className="flex size-full flex-col">
         <div className="root-layout">
-          <Image
-            src={"/icons/logo.svg"}
-            width={30}
-            height={30}
-            alt="hambuger"
-          />
-          <div></div>
+          <Image src={"/icons/logo.svg"} width={30} height={30} alt="logo" />
+          <div>
+            <MobileNav user={loggedIn} />
+          </div>
         </div>
+        {children}
       </div>
-      {children}
     </main>
   );
 }

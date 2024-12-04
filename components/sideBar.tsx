@@ -50,6 +50,10 @@ const SideBar = ({ user }: SiderbarProps) => {
                       className={cn("sidebar-label", {
                         "!text-white": isActive,
                       })}
+                      style={{
+                        textAlign: "center",
+                        textWrap: "pretty",
+                      }}
                     >
                       {item.label}
                     </p>
