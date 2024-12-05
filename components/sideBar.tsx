@@ -51,7 +51,6 @@ const SideBar = ({ user }: SiderbarProps) => {
                         "!text-white": isActive,
                       })}
                       style={{
-                        textAlign: "center",
                         textWrap: "pretty",
                       }}
                     >

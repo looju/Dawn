@@ -26,8 +26,8 @@ const MobileNav = ({ user }: MobileNavProps) => {
           <IoReorderThree size={24} />
         </SheetTrigger>
         <SheetContent
-          side={"right"}
-          className="bg-white w-2/6 content-center pt-10 items-center"
+          side={"left"}
+          className="bg-white w-1/4 content-center pt-10 items-center"
         >
           {sidebarLinks.map((item) => {
             const isActive =
@@ -53,7 +53,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
                       width: "100%",
                     }}
                   >
-                    <div className="relative size-6 w-full h-2 items-center content-center flex flex-row my-2 self-center">
+                    <div className="relative  w-full h-2 items-center content-center flex flex-row my-2 self-center">
                       <Image
                         src={item.imgURL}
                         width={20}
@@ -65,14 +65,16 @@ const MobileNav = ({ user }: MobileNavProps) => {
                         className={cn("sidebar-label", {
                           "!text-white": isActive,
                         })}
+                        style={{
+                          flexWrap: "wrap",
+                          textAlign: "justify",
+                        }}
                       >
                         {item.label}
                       </p>
                     </div>
-                    USER//
                   </div>
                 </SheetClose>
-                FOOTER
               </>
             );
           })}
