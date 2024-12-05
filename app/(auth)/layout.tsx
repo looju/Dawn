@@ -1,3 +1,4 @@
+import AuthForm from "@/components/AuthForm";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
@@ -7,9 +8,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main>
-      sidebar
-      {children}
-    </main>
+    <section className="flex-center size-full max-sm:px-6">
+      <AuthForm type="sign-up" />
+    </section>
   );
 }

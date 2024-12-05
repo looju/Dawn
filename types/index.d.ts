@@ -145,6 +145,9 @@ declare interface CreditCardProps {
   system?: string;
   bgColor?: string;
 }
+declare interface AuthFormProps {
+  type: string;
+}
 
 declare interface BankInfoProps {
   account: Account;

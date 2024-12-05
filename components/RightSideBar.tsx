@@ -47,7 +47,6 @@ const RightSideBar = ({ user, transactions, banks }: RightSidebarProps) => {
                 userName={`${user.firstName} ${user.lastName}`}
                 showBalance={false}
                 system="visa"
-                bgColor={"#C8A2C8"}
               />
             </div>
             {banks[1] && (
@@ -57,6 +56,7 @@ const RightSideBar = ({ user, transactions, banks }: RightSidebarProps) => {
                   account={banks[1]}
                   userName={`${user.firstName} ${user.lastName}`}
                   system="mastercard"
+                  bgColor={"#000"}
                 />
               </div>
             )}
