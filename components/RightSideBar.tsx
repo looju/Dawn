@@ -1,6 +1,7 @@
 import { RightSidebarProps } from "@/types";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
+import ATMCard from "./BankCard";
 
 const RightSideBar = ({ user, transactions, banks }: RightSidebarProps) => {
   return (
@@ -39,10 +40,24 @@ const RightSideBar = ({ user, transactions, banks }: RightSidebarProps) => {
         </div>
         {banks.length > 0 && (
           <div className="flex flex-1 flex-col items-center justify-center relative gap-5">
-            <div className="relative z-10">BANK CARD 1</div>
+            <div className="relative z-10">
+              <ATMCard
+                key={banks[0].$id}
+                account={banks[0]}
+                userName={`${user.firstName} ${user.lastName}`}
+                showBalance={false}
+                system="visa"
+                bgColor={"#C8A2C8"}
+              />
+            </div>
             {banks[1] && (
               <div className="absolute right-0 top-8 z-0 w-[90%]">
-                BANK CARD 2
+                <ATMCard
+                  key={banks[1].$id}
+                  account={banks[1]}
+                  userName={`${user.firstName} ${user.lastName}`}
+                  system="mastercard"
+                />
               </div>
             )}
           </div>

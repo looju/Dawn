@@ -142,6 +142,8 @@ declare interface CreditCardProps {
   account: Account;
   userName: string;
   showBalance?: boolean;
+  system?: string;
+  bgColor?: string;
 }
 
 declare interface BankInfoProps {
