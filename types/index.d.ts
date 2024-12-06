@@ -148,6 +148,12 @@ declare interface CreditCardProps {
 declare interface AuthFormProps {
   type: string;
 }
+declare interface CustomInputProps {
+  name: string;
+  placeholder: string;
+  form: any;
+  label: string;
+}
 
 declare interface BankInfoProps {
   account: Account;
