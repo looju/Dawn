@@ -5,6 +5,7 @@ import Image from "next/image";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -22,6 +23,7 @@ import CustomInput from "./CustomInput";
 const AuthForm = ({ type }: AuthFormProps) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const router = useRouter();
 
   const formSchema = z.object({
@@ -88,7 +90,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     setLoading(false);
   }
   return (
-    <section className="auth-form">
+    <section className="auth-form  max-md:px-6">
       <header className="flex flex-col gap-5 md:gap-8">
         <div className="flex flex-row items-center">
           <Image
@@ -138,7 +140,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 style={{ width: "100%" }}
                 className="bg-bankGradient text-white"
               >
-                Submit
+                {loading && <Loader2 className="animate-spin" />}
+                {loading2 ? "Please wait..." : " Log in"}
               </Button>
             </form>
           </Form>
@@ -258,8 +261,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 type="submit"
                 style={{ width: "100%" }}
                 className="bg-bankGradient text-white"
+                disabled={loading}
               >
-                Submit
+                {loading2 && <Loader2 className="animate-spin" />}
+                {loading2 ? "Please wait..." : " Sign in"}
               </Button>
             </form>
           </Form>

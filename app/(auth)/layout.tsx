@@ -15,6 +15,8 @@ export default function RootLayout({
         style={{
           width: "70%",
           display: "flex",
+          height: "100%",
+          alignSelf: "center",
         }}
       >
         <Image
@@ -22,7 +24,7 @@ export default function RootLayout({
           width={200}
           height={200}
           alt="onboarding-image"
-          style={{ width: "100%", height: "50%" }}
+          style={{ width: "100%", height: "100%" }}
         />
       </div>
     </section>
