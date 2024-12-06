@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { ChartData } from "chart.js";
+import React from "react";
 
 declare type SearchParamProps = {
   params: { [key: string]: string };
@@ -153,6 +154,8 @@ declare interface CustomInputProps {
   placeholder: string;
   form: any;
   label: string;
+  type: React.HTMLInputTypeAttribute;
+  dir?: StandardLonghandProperties<string | number, string & {}>;
 }
 
 declare interface BankInfoProps {

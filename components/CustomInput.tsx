@@ -1,31 +1,39 @@
 import React from "react";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-  } from "@/components/ui/form";
-  import { Input } from "@/components/ui/input";
-const CustomInput = ({form, label, placeholder,name}:) => {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { CustomInputProps } from "@/types";
+const CustomInput = ({
+  form,
+  label,
+  placeholder,
+  name,
+  type,
+  dir,
+}: CustomInputProps) => {
   return (
     <FormField
       control={form.control}
-      name="Email"
+      name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Email</FormLabel>
+          <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder="Enter your Email address" {...field} />
+            <Input placeholder={placeholder} {...field} type={type} />
           </FormControl>
           <div
             style={{
               width: "100%",
               display: "flex",
               flexDirection: "row",
-              justifyContent: "right",
+              justifyContent: dir || "right",
             }}
           >
             <FormMessage

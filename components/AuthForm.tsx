@@ -17,10 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import CustomInput from "./CustomInput";
 
 const AuthForm = ({ type }: AuthFormProps) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   const formSchema = z.object({
     Email: z.string().email().min(2, {
       message: "Email is incomplete",
@@ -30,7 +33,26 @@ const AuthForm = ({ type }: AuthFormProps) => {
     }),
   });
 
-  // 1. Define your form.
+  const signUpformSchema = z.object({
+    Email: z.string().email().min(2, {
+      message: "Email is incomplete",
+    }),
+    Password: z.string().min(8, {
+      message: "Password must be at least 8 characters.",
+    }),
+    FirstName: z.string().min(2, { message: "First name is required" }),
+    LastName: z.string().min(2, { message: "Last name is required" }),
+    Address: z.string().min(2, {
+      message: "Please enter a proper address",
+    }),
+    State: z.string().min(2, {
+      message: "Please enter a proper state",
+    }),
+    PostalCode: z.number().min(2, { message: "Please enter a postal code" }),
+    DOB: z.date({ message: "Invalid date of birth" }),
+    SSN: z.string().min(2, { message: "Please enter a valid SSN" }),
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,11 +61,31 @@ const AuthForm = ({ type }: AuthFormProps) => {
     },
   });
 
-  // 2. Define a submit handler.
+  const signUpForm = useForm<z.infer<typeof signUpformSchema>>({
+    resolver: zodResolver(signUpformSchema),
+    defaultValues: {
+      Email: "",
+      Password: "",
+      FirstName: "",
+      LastName: "",
+      Address: "",
+      State: "",
+      SSN: "",
+      PostalCode: undefined,
+      DOB: undefined,
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    setLoading(true);
     console.log(values);
+    setLoading(false);
+  }
+
+  function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
+    setLoading(true);
+    //do something
+    setLoading(false);
   }
   return (
     <section className="auth-form">
@@ -65,8 +107,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
               {user
                 ? "Link your account to get started"
                 : type == "sign-in"
-                ? "Welcome back! Please Enter your details"
-                : "Please Enter your details"}
+                ? "Welcome back! Please enter your details"
+                : "Please enter your details"}
             </p>
           </h1>
         </div>
@@ -77,62 +119,19 @@ const AuthForm = ({ type }: AuthFormProps) => {
         <>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
+              <CustomInput
                 name="Email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your Email address"
-                        {...field}
-                      />
-                    </FormControl>
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "right",
-                      }}
-                    >
-                      <FormMessage
-                        style={{
-                          color: "#ff0000",
-                          fontSize: 12,
-                        }}
-                      />
-                    </div>
-                  </FormItem>
-                )}
+                label="Email"
+                placeholder="Enter your Email address"
+                form={form}
+                type={"email"}
               />
-              <FormField
-                control={form.control}
+              <CustomInput
                 name="Password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your Password" {...field} />
-                    </FormControl>
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "right",
-                      }}
-                    >
-                      <FormMessage
-                        style={{
-                          color: "#ff0000",
-                          fontSize: 12,
-                        }}
-                      />
-                    </div>
-                  </FormItem>
-                )}
+                label="Password"
+                placeholder="Enter your Password"
+                form={form}
+                type={"password"}
               />
               <Button
                 type="submit"
@@ -163,64 +162,97 @@ const AuthForm = ({ type }: AuthFormProps) => {
         </>
       ) : type == "sign-up" ? (
         <>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="Email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Emaill</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your Email address"
-                        {...field}
-                      />
-                    </FormControl>
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "right",
-                      }}
-                    >
-                      <FormMessage
-                        style={{
-                          color: "#ff0000",
-                          fontSize: 12,
-                        }}
-                      />
-                    </div>
-                  </FormItem>
-                )}
+          <Form {...signUpForm}>
+            <form
+              onSubmit={signUpForm.handleSubmit(onSignUpSubmit)}
+              className="space-y-8"
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                <CustomInput
+                  name="FirstName"
+                  label="First Name"
+                  placeholder="John"
+                  form={signUpForm}
+                  type={"text"}
+                />
+                <CustomInput
+                  name="LastName"
+                  label="Last Name"
+                  placeholder="Simon"
+                  form={signUpForm}
+                  type={"text"}
+                />
+              </div>
+              <CustomInput
+                name="Address"
+                label="Address"
+                placeholder="Enter your specific address"
+                form={signUpForm}
+                type={"text"}
               />
-              <FormField
-                control={form.control}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                <CustomInput
+                  name="State"
+                  label="State"
+                  placeholder="ex:Lagos"
+                  form={signUpForm}
+                  type={"text"}
+                />
+                <CustomInput
+                  name="PostalCode"
+                  label="Postal Code"
+                  placeholder="ex:11877"
+                  form={signUpForm}
+                  type={"text"}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <CustomInput
+                  name="DOB"
+                  label="Date of Birth"
+                  placeholder="YYYY-MM-DD"
+                  form={signUpForm}
+                  type={"date"}
+                />
+                <CustomInput
+                  name="SSN"
+                  label="SSN"
+                  placeholder="ex:221"
+                  form={signUpForm}
+                  type={"text"}
+                />
+              </div>
+              <CustomInput
+                name="Email"
+                label="Email"
+                placeholder="Enter your Email address"
+                form={signUpForm}
+                type={"email"}
+              />
+              <CustomInput
                 name="Password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your Password" {...field} />
-                    </FormControl>
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "right",
-                      }}
-                    >
-                      <FormMessage
-                        style={{
-                          color: "#ff0000",
-                          fontSize: 12,
-                        }}
-                      />
-                    </div>
-                  </FormItem>
-                )}
+                label="Password"
+                placeholder="Enter your Password"
+                form={signUpForm}
+                type={"password"}
               />
               <Button
                 type="submit"
