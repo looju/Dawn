@@ -1,8 +1,41 @@
-import { Client, Databases, Account } from "appwrite";
+"use server";
+import { Client, Account, Databases, Users } from "node-appwrite";
+import { cookies } from "next/headers";
 
-const id = process.env.DB_APPWRITEID;
-const client = new Client();
-client.setEndpoint("https://cloud.appwrite.io/v1").setProject(id);
+export async function createSessionClient() {
+  const client = new Client()
+    .setEndpoint(process.env.NEXT_APPWRITE_ENDPOINT!)
+    .setProject(process.env.NEXT_APPWRITE_PROJECTID!);
 
-export const account = new Account(client);
-export const databases = new Databases(client);
+  const session = (await cookies()).get("appwrite-session");
+  if (!session || !session.value) {
+    throw new Error("No session");
+  }
+
+  client.setSession(session.value);
+
+  return {
+    get account() {
+      return new Account(client);
+    },
+  };
+}
+
+export async function createAdminClient() {
+  const client = new Client()
+    .setEndpoint(process.env.NEXT_APPWRITE_ENDPOINT!)
+    .setProject(process.env.NEXT_APPWRITE_PROJECTID!)
+    .setKey(process.env.NEXT_APIKEY!);
+
+  return {
+    get account() {
+      return new Account(client);
+    },
+    get database() {
+      return new Databases(client);
+    },
+    get Users() {
+      return new Users(client);
+    },
+  };
+}
