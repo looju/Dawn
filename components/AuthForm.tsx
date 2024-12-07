@@ -15,78 +15,84 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { ID, Models } from "appwrite";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { account } from "@/lib/AppWriteConfig";
 import CustomInput from "./CustomInput";
+import { signIn, signUp } from "@/lib/user.actions";
 
 const AuthForm = ({ type }: AuthFormProps) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<Models.Session | null>(null);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const router = useRouter();
 
   const formSchema = z.object({
-    Email: z.string().email().min(2, {
+    email: z.string().email().min(2, {
       message: "Email is incomplete",
     }),
-    Password: z.string().min(8, {
+    password: z.string().min(8, {
       message: "Password must be at least 8 characters.",
     }),
   });
 
   const signUpformSchema = z.object({
-    Email: z.string().email().min(2, {
+    email: z.string().email().min(2, {
       message: "Email is incomplete",
     }),
-    Password: z.string().min(8, {
+    password: z.string().min(8, {
       message: "Password must be at least 8 characters.",
     }),
-    FirstName: z.string().min(2, { message: "First name is required" }),
-    LastName: z.string().min(2, { message: "Last name is required" }),
-    Address: z.string().min(2, {
+    firstName: z.string().min(2, { message: "First name is required" }),
+    lastName: z.string().min(2, { message: "Last name is required" }),
+    address1: z.string().min(2, {
       message: "Please enter a proper address",
     }),
-    State: z.string().min(2, {
+    state: z.string().min(2, {
       message: "Please enter a proper state",
     }),
-    PostalCode: z.number().min(2, { message: "Please enter a postal code" }),
-    DOB: z.date({ message: "Invalid date of birth" }),
-    SSN: z.string().min(2, { message: "Please enter a valid SSN" }),
+    city: z.string().min(2, {
+      message: "Please enter the city name",
+    }),
+    postalCode: z.number().min(2, { message: "Please enter a postal code" }),
+    dateOfBirth: z.date({ message: "Invalid date of birth" }),
+    ssn: z.string().min(2, { message: "Please enter a valid SSN" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Email: "",
-      Password: "",
+      email: "",
+      password: "",
     },
   });
 
   const signUpForm = useForm<z.infer<typeof signUpformSchema>>({
     resolver: zodResolver(signUpformSchema),
     defaultValues: {
-      Email: "",
-      Password: "",
-      FirstName: "",
-      LastName: "",
-      Address: "",
-      State: "",
-      SSN: "",
-      PostalCode: undefined,
-      DOB: undefined,
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      address1: "",
+      state: "",
+      ssn: "",
+      postalCode: undefined,
+      dateOfBirth: undefined,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    console.log(values);
-    setLoading(false);
+    signIn(values.email, values.password).finally(() => setLoading(false));
   }
 
-  function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
+  async function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
     setLoading(true);
-    //do something
+
+    await signUp(values);
     setLoading(false);
   }
   return (
@@ -122,14 +128,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <CustomInput
-                name="Email"
+                name="email"
                 label="Email"
                 placeholder="Enter your Email address"
                 form={form}
                 type={"email"}
               />
               <CustomInput
-                name="Password"
+                name="password"
                 label="Password"
                 placeholder="Enter your Password"
                 form={form}
@@ -178,14 +184,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 }}
               >
                 <CustomInput
-                  name="FirstName"
+                  name="firstName"
                   label="First Name"
                   placeholder="John"
                   form={signUpForm}
                   type={"text"}
                 />
                 <CustomInput
-                  name="LastName"
+                  name="lastName"
                   label="Last Name"
                   placeholder="Simon"
                   form={signUpForm}
@@ -193,7 +199,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 />
               </div>
               <CustomInput
-                name="Address"
+                name="city"
+                label="City"
+                placeholder="Enter your city"
+                form={signUpForm}
+                type={"text"}
+              />
+              <CustomInput
+                name="address1"
                 label="Address"
                 placeholder="Enter your specific address"
                 form={signUpForm}
@@ -207,14 +220,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 }}
               >
                 <CustomInput
-                  name="State"
+                  name="state"
                   label="State"
                   placeholder="ex:Lagos"
                   form={signUpForm}
                   type={"text"}
                 />
                 <CustomInput
-                  name="PostalCode"
+                  name="postalCode"
                   label="Postal Code"
                   placeholder="ex:11877"
                   form={signUpForm}
@@ -229,14 +242,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 }}
               >
                 <CustomInput
-                  name="DOB"
+                  name="dateOfBirth"
                   label="Date of Birth"
                   placeholder="YYYY-MM-DD"
                   form={signUpForm}
                   type={"date"}
                 />
                 <CustomInput
-                  name="SSN"
+                  name="ssn"
                   label="SSN"
                   placeholder="ex:221"
                   form={signUpForm}
@@ -244,14 +257,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 />
               </div>
               <CustomInput
-                name="Email"
+                name="email"
                 label="Email"
                 placeholder="Enter your Email address"
                 form={signUpForm}
                 type={"email"}
               />
               <CustomInput
-                name="Password"
+                name="password"
                 label="Password"
                 placeholder="Enter your Password"
                 form={signUpForm}
