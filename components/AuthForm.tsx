@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import {
@@ -19,14 +20,19 @@ import { ID, Models } from "appwrite";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { account } from "@/lib/AppWriteConfig";
 import CustomInput from "./CustomInput";
 import { signIn, signUp } from "@/lib/user.actions";
+import { AlertBox } from "./Alert";
+import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 const AuthForm = ({ type }: AuthFormProps) => {
   const [user, setUser] = useState<Models.Session | null>(null);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [info, setInfo] = useState<"Success" | "Error" | "Warning">("Success");
   const router = useRouter();
 
   const formSchema = z.object({
@@ -56,8 +62,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
     city: z.string().min(2, {
       message: "Please enter the city name",
     }),
-    postalCode: z.number().min(2, { message: "Please enter a postal code" }),
-    dateOfBirth: z.date({ message: "Invalid date of birth" }),
+    postalCode: z.string().min(2, { message: "Please enter a postal code" }),
+    dateOfBirth: z.string().min(2, { message: "Invalid date of birth" }),
     ssn: z.string().min(2, { message: "Please enter a valid SSN" }),
   });
 
@@ -86,14 +92,44 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    signIn(values.email, values.password).finally(() => setLoading(false));
+    await signIn(values.email, values.password)
+      .then((res) => {
+        if (res != null) {
+          setShowAlert(true);
+          setInfo("Success");
+          setMessage(`Welcome back ${res.name}`);
+          router.push("/");
+        } else {
+          setShowAlert(true);
+          setInfo("Error");
+          setMessage("Please try again");
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        setShowAlert(true);
+        setInfo("Error");
+        setMessage("An unexpected erro occured.");
+        setLoading(false);
+      });
   }
 
   async function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
-    setLoading(true);
-
-    await signUp(values);
-    setLoading(false);
+    setLoading2(true);
+    const user = await signUp(values);
+    setUser(user);
+    if (user !== null) {
+      setShowAlert(true);
+      setMessage("Account successfully created");
+      setInfo("Success");
+      setLoading2(false);
+      router.push("/");
+    } else {
+      setShowAlert(true);
+      setInfo("Error");
+      setMessage("An unexpected error occured.");
+      setLoading2(false);
+    }
   }
   return (
     <section className="auth-form  max-md:px-6">
@@ -107,6 +143,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
             className="max-xl:w-11 hover:cursor-pointer"
           />
           <h1 className="sidebar-logo">Horizon</h1>
+
+          {showAlert && <AlertBox message={message} info={info} />}
         </div>
         <div className="flex flex-col gap-1 md:gap-3">
           <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
@@ -145,9 +183,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 type="submit"
                 style={{ width: "100%" }}
                 className="bg-bankGradient text-white"
+                disabled={loading}
               >
                 {loading && <Loader2 className="animate-spin" />}
-                {loading2 ? "Please wait..." : " Log in"}
+                {loading ? "Please wait..." : " Log in"}
               </Button>
             </form>
           </Form>
@@ -274,7 +313,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 type="submit"
                 style={{ width: "100%" }}
                 className="bg-bankGradient text-white"
-                disabled={loading}
+                disabled={loading2}
               >
                 {loading2 && <Loader2 className="animate-spin" />}
                 {loading2 ? "Please wait..." : " Sign in"}

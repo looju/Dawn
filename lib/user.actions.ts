@@ -8,9 +8,10 @@ import { parseStringify } from "./utils";
 
 export const signIn = async (email: string, password: string) => {
   try {
-    const data = await account.createEmailPasswordSession(email, password);
-    console.log(data);
-    return data;
+    const { account } = await createAdminClient();
+    const user = await account.createEmailPasswordSession(email, password);
+
+    return parseStringify(user);
   } catch (error) {
     console.log(error, "error signing up");
   }
@@ -46,8 +47,10 @@ export const signUp = async (userData: SignUpParams) => {
 export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
-    return await account.get();
+    const user = await account.get();
+    return parseStringify(user);
   } catch (error) {
+    console.log(error, "error returning user");
     return null;
   }
 }
