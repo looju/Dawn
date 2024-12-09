@@ -104,6 +104,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
           setInfo("Error");
           setMessage("Please try again");
           setLoading(false);
+          setTimeout(() => setShowAlert(false), 3000);
         }
       })
       .catch(() => {
@@ -111,6 +112,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         setInfo("Error");
         setMessage("An unexpected erro occured.");
         setLoading(false);
+        setTimeout(() => setShowAlert(false), 3000);
       });
   }
 
@@ -129,6 +131,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
       setInfo("Error");
       setMessage("An unexpected error occured.");
       setLoading2(false);
+      setTimeout(() => setShowAlert(false), 3000);
     }
   }
   return (

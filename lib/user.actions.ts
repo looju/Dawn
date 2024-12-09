@@ -10,7 +10,7 @@ export const signIn = async (email: string, password: string) => {
   try {
     const { account } = await createAdminClient();
     const user = await account.createEmailPasswordSession(email, password);
-
+    console.log(user, "fromm");
     return parseStringify(user);
   } catch (error) {
     console.log(error, "error signing up");
