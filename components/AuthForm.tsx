@@ -107,10 +107,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
           setTimeout(() => setShowAlert(false), 3000);
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         setShowAlert(true);
         setInfo("Error");
-        setMessage("An unexpected erro occured.");
+        setMessage("An unexpected error occured.");
         setLoading(false);
         setTimeout(() => setShowAlert(false), 3000);
       });

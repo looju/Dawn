@@ -17,13 +17,13 @@ export interface BalanceState {
   title: () => string | string;
 }
 
-export const useBalanceStore = create(
+export const useDataStore = create(
   persist(
     (set, get) => ({
       user: [],
       setUser: (data: any) => {
-        set((state: any) => ({
-          user: [...state.user, data],
+        set(() => ({
+          user: [data],
         }));
       },
     }),

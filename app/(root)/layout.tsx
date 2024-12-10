@@ -1,3 +1,4 @@
+import { useDataStore } from "@/Store/UsersData";
 import MobileNav from "@/components/mobileNav";
 import SideBar from "@/components/sideBar";
 import { getLoggedInUser } from "@/lib/user.actions";
@@ -5,16 +6,13 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { Account } from "appwrite";
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getLoggedInUser();
-  if (!user) {
-    redirect("/signUp");
-  }
   const loggedIn = { firstName: "loju", lastName: "hi" };
 
   return (
