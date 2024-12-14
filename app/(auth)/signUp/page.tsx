@@ -8,7 +8,7 @@ import React, { useEffect } from "react";
 export default async function Page() {
   useEffect(() => {
     const data = window.localStorage.getItem("user-data");
-    const user = data !== null ? JSON.parse(data) : null;
+    const user = data !== null ? JSON.parse(JSON.stringify(data)) : null;
     if (user !== null) {
       redirect("/");
     }

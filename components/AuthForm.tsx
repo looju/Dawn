@@ -97,7 +97,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         if (res != null) {
           setShowAlert(true);
           setInfo("Success");
-          setUser(JSON.stringify(res));
+          setUser(res);
           setMessage(`Welcome back ${res.name}`);
         } else {
           setShowAlert(true);
@@ -121,7 +121,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     setLoading2(true);
     const user = await signUp(values);
     if (user !== null) {
-      setUser(JSON.stringify(user));
+      setUser(user);
       setShowAlert(true);
       setMessage("Account successfully created");
       setInfo("Success");
@@ -136,12 +136,16 @@ const AuthForm = ({ type }: AuthFormProps) => {
   }
 
   useEffect(() => {
-    const data = window.localStorage.getItem("user-data");
-    const user = data !== null ? JSON.parse(data) : null;
-    if (user !== null) {
+    const data = JSON.parse(JSON.stringify(user));
+    const storedUser =
+      window !== undefined
+        ? window.localStorage.setItem("user-data", data)
+        : null;
+    if (storedUser !== null) {
       router.push("/");
     }
   }, [user]);
+
   return (
     <section className="auth-form  max-md:px-6">
       <header className="flex flex-col gap-5 md:gap-8">
