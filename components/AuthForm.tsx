@@ -1,6 +1,6 @@
 "use client";
 import { AuthFormProps } from "@/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -27,7 +27,7 @@ import clsx from "clsx";
 import { cn } from "@/lib/utils";
 
 const AuthForm = ({ type }: AuthFormProps) => {
-  const [user, setUser] = useState<Models.Session | null>(null);
+  const [user, setUser] = useState<Models.Session | null | string>(null);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -97,8 +97,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
         if (res != null) {
           setShowAlert(true);
           setInfo("Success");
+          setUser(JSON.stringify(res));
           setMessage(`Welcome back ${res.name}`);
-          router.push("/");
         } else {
           setShowAlert(true);
           setInfo("Error");
@@ -120,13 +120,12 @@ const AuthForm = ({ type }: AuthFormProps) => {
   async function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
     setLoading2(true);
     const user = await signUp(values);
-    setUser(user);
     if (user !== null) {
+      setUser(JSON.stringify(user));
       setShowAlert(true);
       setMessage("Account successfully created");
       setInfo("Success");
       setLoading2(false);
-      router.push("/");
     } else {
       setShowAlert(true);
       setInfo("Error");
@@ -135,6 +134,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
       setTimeout(() => setShowAlert(false), 3000);
     }
   }
+
+  useEffect(() => {
+    const data = window.localStorage.getItem("user-data");
+    const user = data !== null ? JSON.parse(data) : null;
+    if (user !== null) {
+      router.push("/");
+    }
+  }, [user]);
   return (
     <section className="auth-form  max-md:px-6">
       <header className="flex flex-col gap-5 md:gap-8">

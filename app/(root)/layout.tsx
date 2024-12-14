@@ -1,3 +1,4 @@
+"use client";
 import { useDataStore } from "@/Store/UsersData";
 import MobileNav from "@/components/mobileNav";
 import SideBar from "@/components/sideBar";
@@ -7,6 +8,7 @@ import localFont from "next/font/local";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Account } from "appwrite";
+import { useEffect, useState } from "react";
 
 export default async function RootLayout({
   children,
@@ -14,6 +16,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const loggedIn = { firstName: "loju", lastName: "hi" };
+
+  useEffect(() => {
+    const data = window.localStorage.getItem("user-data");
+    const user = data !== null ? JSON.parse(data) : null;
+    if (user == null) {
+      redirect("/signIn");
+    }
+  }, []);
 
   return (
     <main className="flex flex-row w-full h-screen font-ibm-plex-serif">
