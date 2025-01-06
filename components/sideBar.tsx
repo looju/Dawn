@@ -5,6 +5,7 @@ import { SiderbarProps } from "@/types";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import Footer from "./Footer";
 
 const SideBar = ({ user }: SiderbarProps) => {
   const router = useRouter();
@@ -64,6 +65,7 @@ const SideBar = ({ user }: SiderbarProps) => {
           })}
         </div>
       </nav>
+      <Footer user={user} />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-"use client";
 import { useDataStore } from "@/Store/UsersData";
 import MobileNav from "@/components/mobileNav";
 import SideBar from "@/components/sideBar";
@@ -8,7 +7,7 @@ import localFont from "next/font/local";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Account } from "appwrite";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import useLocalStorage from "use-local-storage";
 
 export default async function RootLayout({
@@ -16,9 +15,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [user, setUser] = useState<[] | null>(null);
-  const [storeUser, setStoredUser] = useLocalStorage("user", null);
-  if (!storeUser) redirect("/signIn");
+  // const [user, setUser] = useState<[] | null>(null);
+  // const [storeUser, setStoredUser] = useLocalStorage("user", null);
+  // if (!storeUser) redirect("/signIn");
+
+  let storeUser = {};
 
   return (
     <main className="flex flex-row w-full h-screen font-ibm-plex-serif">

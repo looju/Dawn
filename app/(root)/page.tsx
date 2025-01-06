@@ -11,7 +11,7 @@ export default function Home() {
   const [loggedIn2] = useLocalStorage<any>("user", null);
   const [generatedFirstName, setGeneratedFirstName] = useState("");
   const [generatedLastName, setGeneratedLastName] = useState("");
-  const email = loggedIn2?.providerUid;
+  const email = loggedIn2?.providerUid ?? "gg@gmail.com";
   const loggedIn = {
     firstName: generatedFirstName,
     lastName: generatedLastName,
