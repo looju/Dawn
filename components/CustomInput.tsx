@@ -26,7 +26,12 @@ const CustomInput = ({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} type={type} />
+            <Input
+              placeholder={placeholder}
+              {...field}
+              type={type}
+              className="focus:border-blue-600 outline-0 focus:ring-transparent"
+            />
           </FormControl>
           <div
             style={{

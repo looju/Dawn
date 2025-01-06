@@ -9,38 +9,25 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Account } from "appwrite";
 import { useEffect, useState } from "react";
+import useLocalStorage from "use-local-storage";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const loggedIn = { firstName: "loju", lastName: "hi" };
   const [user, setUser] = useState<[] | null>(null);
-
-  useEffect(() => {
-    const data =
-      window !== undefined
-        ? window.localStorage.getItem("user-data")
-        : undefined;
-    const user = data !== undefined ? JSON.parse(JSON.stringify(data)) : null;
-
-    if (user !== null) {
-      console.log("user is null");
-      redirect("/signIn");
-    } else {
-      setUser(user);
-    }
-  });
+  const [storeUser, setStoredUser] = useLocalStorage("user", null);
+  if (!storeUser) redirect("/signIn");
 
   return (
     <main className="flex flex-row w-full h-screen font-ibm-plex-serif">
-      <SideBar user={loggedIn} />
+      <SideBar user={storeUser} />
       <div className="flex size-full flex-col">
         <div className="root-layout">
           <Image src={"/icons/logo.svg"} width={30} height={30} alt="logo" />
           <div>
-            <MobileNav user={loggedIn} />
+            <MobileNav user={storeUser} />
           </div>
         </div>
         {children}

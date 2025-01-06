@@ -5,6 +5,7 @@ import Image from "next/image";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Transition } from "@headlessui/react";
+import useLocalStorage from "use-local-storage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,15 +21,17 @@ import {
 import { ID, Models } from "appwrite";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import CustomInput from "./CustomInput";
 import { signIn, signUp } from "@/lib/user.actions";
 import { AlertBox } from "./Alert";
 import clsx from "clsx";
-import { cn } from "@/lib/utils";
+import { cn, parseStringify } from "@/lib/utils";
+import { ErrorToast, SuccessToast } from "./Toast";
 
 const AuthForm = ({ type }: AuthFormProps) => {
   const [user, setUser] = useState<Models.Session | null | string>(null);
+  const [storeUser, setStoredUser] = useLocalStorage("user", null);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -102,51 +105,47 @@ const AuthForm = ({ type }: AuthFormProps) => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    await signIn(values.email, values.password)
-      .then((res) => {
-        console.log(res, "resss");
-        if (res !== undefined) {
-          setInfo("Success");
-          setUser(res);
-          storeData();
-          setMessage(`Welcome back ${res.name}`);
-        } else {
-          setShowAlert(true);
-          setInfo("Error");
-          setMessage("Please try again");
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const fn = async () => {
+      setLoading(true);
+      await signIn(values.email, values.password)
+        .then((res) => {
+          console.log(res, "resss");
+          if (res !== undefined) {
+            const data = parseStringify(res);
+            SuccessToast(`Welcome back`);
+            setStoredUser(data);
+            setLoading(false);
+            router.push("/");
+          } else if (res == undefined) {
+            ErrorToast("Invalid Email or Password. Please try again");
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
           setLoading(false);
-          setTimeout(() => setShowAlert(false), 3000);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setShowAlert(true);
-        setInfo("Error");
-        setMessage("An unexpected error occured.");
-        setLoading(false);
-        setTimeout(() => setShowAlert(false), 3000);
-      });
+        });
+    };
+    fn();
   }
 
-  async function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
-    setLoading2(true);
-    const user = await signUp(values);
-    if (user !== undefined) {
-      setUser(user);
-      setShowAlert(true);
-      setMessage("Account successfully created");
-      setInfo("Success");
-      setLoading2(false);
-      storeData();
-    } else {
-      setShowAlert(true);
-      setInfo("Error");
-      setMessage("An unexpected error occured.");
-      setLoading2(false);
-      setTimeout(() => setShowAlert(false), 3000);
-    }
+  function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
+    const fn = async () => {
+      setLoading2(true);
+      const user = await signUp(values);
+      if (user !== undefined) {
+        setUser(user);
+        SuccessToast(`Account successfully created`);
+        setLoading2(false);
+        setStoredUser(user);
+        router.push("/");
+      } else {
+        ErrorToast("An unexpected error occured.");
+        setLoading2(false);
+      }
+    };
+    fn();
   }
 
   // useEffect(() => {
@@ -172,8 +171,6 @@ const AuthForm = ({ type }: AuthFormProps) => {
             className="max-xl:w-11 hover:cursor-pointer"
           />
           <h1 className="sidebar-logo">Horizon</h1>
-
-          {showAlert && <AlertBox message={message} info={info} />}
         </div>
         <div className="flex flex-col gap-1 md:gap-3">
           <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
