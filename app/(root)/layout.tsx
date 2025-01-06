@@ -10,20 +10,28 @@ import { redirect } from "next/navigation";
 import { Account } from "appwrite";
 import { useEffect, useState } from "react";
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const loggedIn = { firstName: "loju", lastName: "hi" };
+  const [user, setUser] = useState<[] | null>(null);
 
   useEffect(() => {
-    const data = window.localStorage.getItem("user-data");
-    const user = data !== null ? JSON.parse(JSON.stringify(data)) : null;
-    if (user == null) {
+    const data =
+      window !== undefined
+        ? window.localStorage.getItem("user-data")
+        : undefined;
+    const user = data !== undefined ? JSON.parse(JSON.stringify(data)) : null;
+
+    if (user !== null) {
+      console.log("user is null");
       redirect("/signIn");
+    } else {
+      setUser(user);
     }
-  }, []);
+  });
 
   return (
     <main className="flex flex-row w-full h-screen font-ibm-plex-serif">

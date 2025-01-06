@@ -34,7 +34,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
               pathName === item.route || pathName.startsWith(`${item.route}/`);
             return (
               <>
-                <SheetClose>
+                <SheetClose key={item.imgURL}>
                   <div
                     onClick={(e) => {
                       e.preventDefault();

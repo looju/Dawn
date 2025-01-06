@@ -23,39 +23,40 @@ const SideBar = ({ user }: SiderbarProps) => {
             />
             <h1 className="sidebar-logo">Horizon</h1>
           </div>
-          {sidebarLinks.map((item) => {
+          {sidebarLinks.map((item, index) => {
             const isActive =
               pathName === item.route || pathName.startsWith(`${item.route}/`);
             return (
               <>
-                <div
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(item.route);
-                  }}
-                  key={item.imgURL}
-                  className={cn("sidebar-link", "w-full", {
-                    "bg-bankGradient": isActive,
-                  })}
-                >
-                  <div className="relative size-6 w-full h-2 items-center flex flex-row my-2">
-                    <Image
-                      src={item.imgURL}
-                      width={20}
-                      height={20}
-                      alt="link images"
-                      className="mr-2"
-                    />
-                    <p
-                      className={cn("sidebar-label", {
-                        "!text-white": isActive,
-                      })}
-                      style={{
-                        textWrap: "pretty",
-                      }}
-                    >
-                      {item.label}
-                    </p>
+                <div key={index}>
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(item.route);
+                    }}
+                    className={cn("sidebar-link", "w-full", {
+                      "bg-bankGradient": isActive,
+                    })}
+                  >
+                    <div className="relative size-6 w-full h-2 items-center flex flex-row my-2">
+                      <Image
+                        src={item.imgURL}
+                        width={20}
+                        height={20}
+                        alt="link images"
+                        className="mr-2"
+                      />
+                      <p
+                        className={cn("sidebar-label", {
+                          "!text-white": isActive,
+                        })}
+                        style={{
+                          textWrap: "pretty",
+                        }}
+                      >
+                        {item.label}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </>

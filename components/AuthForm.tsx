@@ -1,12 +1,13 @@
 "use client";
 import { AuthFormProps } from "@/types";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
 import {
   Form,
   FormControl,
@@ -34,6 +35,17 @@ const AuthForm = ({ type }: AuthFormProps) => {
   const [message, setMessage] = useState("");
   const [info, setInfo] = useState<"Success" | "Error" | "Warning">("Success");
   const router = useRouter();
+
+  const storeData = useCallback(() => {
+    const data = JSON.parse(JSON.stringify(user));
+    const storedUser =
+      window !== undefined
+        ? window.localStorage.setItem("user-data", data)
+        : null;
+    if (storedUser !== null) {
+      router.push("/");
+    }
+  }, [user]);
 
   const formSchema = z.object({
     email: z.string().email().min(2, {
@@ -94,10 +106,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
     setLoading(true);
     await signIn(values.email, values.password)
       .then((res) => {
-        if (res != null) {
-          setShowAlert(true);
+        console.log(res, "resss");
+        if (res !== undefined) {
           setInfo("Success");
           setUser(res);
+          storeData();
           setMessage(`Welcome back ${res.name}`);
         } else {
           setShowAlert(true);
@@ -120,12 +133,13 @@ const AuthForm = ({ type }: AuthFormProps) => {
   async function onSignUpSubmit(values: z.infer<typeof signUpformSchema>) {
     setLoading2(true);
     const user = await signUp(values);
-    if (user !== null) {
+    if (user !== undefined) {
       setUser(user);
       setShowAlert(true);
       setMessage("Account successfully created");
       setInfo("Success");
       setLoading2(false);
+      storeData();
     } else {
       setShowAlert(true);
       setInfo("Error");
@@ -135,16 +149,16 @@ const AuthForm = ({ type }: AuthFormProps) => {
     }
   }
 
-  useEffect(() => {
-    const data = JSON.parse(JSON.stringify(user));
-    const storedUser =
-      window !== undefined
-        ? window.localStorage.setItem("user-data", data)
-        : null;
-    if (storedUser !== null) {
-      router.push("/");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const data = JSON.parse(JSON.stringify(user));
+  //   const storedUser =
+  //     window !== undefined
+  //       ? window.localStorage.setItem("user-data", data)
+  //       : null;
+  //   if (storedUser !== null) {
+  //     router.push("/");
+  //   }
+  // }, [user]);
 
   return (
     <section className="auth-form  max-md:px-6">

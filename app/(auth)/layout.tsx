@@ -2,7 +2,7 @@ import AuthForm from "@/components/AuthForm";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Image from "next/image";
-
+import { ToastContainer } from "react-toastify";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,6 +27,7 @@ export default function RootLayout({
           style={{ width: "100%", height: "100%" }}
         />
       </div>
+      <ToastContainer autoClose={5000} />
     </section>
   );
 }
