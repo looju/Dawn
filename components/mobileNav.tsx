@@ -28,7 +28,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
         </SheetTrigger>
         <SheetContent
           side={"left"}
-          className="bg-white w-1/4 content-center pt-10 items-center"
+          className="bg-white w-1/4 content-center pt-10 items-center "
         >
           {sidebarLinks.map((item) => {
             const isActive =
@@ -79,7 +79,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
               </>
             );
           })}
-          <Footer user={user} />
+          <Footer user={user} type={"mobile"} />
         </SheetContent>
       </Sheet>
     </section>

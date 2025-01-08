@@ -22,6 +22,7 @@ export default function ATMCard({
           year={26}
           system={system}
           hideDigits={true}
+          dataColor="white"
           dark={true}
           onChange={() => null}
           lifted={true}

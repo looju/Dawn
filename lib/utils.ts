@@ -83,6 +83,10 @@ export const removeSpecialCharacters = (value: string) => {
   return value.replace(/[^\w\s]/gi, "");
 };
 
+export const trimString = (string: string, char: number) => {
+  return string.substring(0, char);
+};
+
 interface UrlQueryParams {
   params: string;
   key: string;
